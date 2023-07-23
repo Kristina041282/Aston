@@ -45,52 +45,6 @@ public class PurchaseList {//список покупок
         this.course = course;
     }
 
-    //@ManyToMany(cascade = CascadeType.ALL)
-    //@JoinTable(name = "Linkedpurchaselist",
-    //        joinColumns = {@JoinColumn(name = "student_id")},
-    //        inverseJoinColumns = {@JoinColumn(name = "course_id")})
-    //private List<Student> studentList;
-
-
-    //@ManyToMany(cascade = CascadeType.ALL)
-    //@JoinTable(name = "Linkedpurchaselist",
-    //        joinColumns = {@JoinColumn(name = "student_id")},
-    //        inverseJoinColumns = {@JoinColumn(name = "course_id")})
-    //private List<Course> courseList;
-
-
-    //public List<Course> getCourseList() {
-    //    return courseList;
-    //}
-
-    //public void setCourseList(List<Course> courseList) {
-    //    this.courseList = courseList;
-    //}
-
-    //public List<Student> getStudentList() {
-    //    return studentList;
-    //}
-
-    //public void setStudentList(List<Student> studentList) {
-    //    this.studentList = studentList;
-    //}
-
-    //public String getStudentName() {
-    //    return studentName;
-    //}
-
-    //public void setStudentName(String studentName) {
-    //    this.studentName = studentName;
-    //}
-
-    //public String getCourseName() {
-    //    return courseName;
-    //}
-
-    //public void setCourseName(String courseName) {
-    //    this.courseName = courseName;
-    //}
-
     public int getPrice() {
         return price;
     }

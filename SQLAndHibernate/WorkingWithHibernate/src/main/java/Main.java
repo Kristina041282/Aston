@@ -14,6 +14,8 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
 
+        Course course;
+
         //Подключаемся к б.д. для этого создаем StandardServiceRegistry вызываем у него метод configure и передаем путь
         //рекомендуется один раз статически это сделать и потом этот SessionFactory где-то получать (например в отдел.классе)
         StandardServiceRegistry registry = new StandardServiceRegistryBuilder().configure("hibernate.cfg.xml").build();
@@ -29,13 +31,14 @@ public class Main {
         query.select(root);//формируем запрос, допустим хотим селект из этой таб., то есть таб. Course
         List<PurchaseList> courseList = session.createQuery(query).getResultList();//создаем createQuery(вот этого критерия query) и можем получить в разных видах результаты,
         //мы выбрали вернуть их нам списком и создали List в который все сложим
-        for (PurchaseList purchaseList : courseList) {//так же добавили в аннотацию fetch = FetchType.LAZY это если захотим распечатывать без учителей и только список курсов, в таком
-            //случае не нужно будет прописывать здесь соurse.getTeacher().getName()
+        for (PurchaseList purchaseList : courseList) {
             //LinkedPurchaseList list = new LinkedPurchaseList(purchaseList.getStudent().getId(), purchaseList.getCourse().getId());
             LinkedPurchaseList list = new LinkedPurchaseList();
+            System.out.println(list.getStudentId() + " --- " + list.getCourseId());
             list.setStudentId(purchaseList.getStudent().getId());
             list.setCourseId(purchaseList.getCourse().getId());
             System.out.println("IdСтудента:" + list.getStudentId() + " - " + "IdКурса:" + list.getCourseId());
+            session.persist(list);
         }
         transaction.commit();//делаем коммит (получается, закрыли транзакцию)
         sessionFactory.close();//в конце обязательно закрываем
