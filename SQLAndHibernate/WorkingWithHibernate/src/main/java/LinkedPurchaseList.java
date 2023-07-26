@@ -1,28 +1,28 @@
 import jakarta.persistence.*;
 @Entity
-
 @Table(name = "Linkedpurchaselist")
 public class LinkedPurchaseList {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    //@JoinColumn(name = "student_id", referencedColumnName = "id", insertable = false, updatable = false)
-    @Column(name = "student_id")
-    //@Column(name = "student_id", insertable = false, updatable = false)
-    private int studentId;
+    @EmbeddedId
+    private LinkedPurchaseListKey id;//в качестве id указали экземпляр класса ключа LinkedPurchaseListKey
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    //@JoinColumn(name = "course_id", referencedColumnName = "id", insertable = false, updatable = false)
-    @Column(name = "course_id")
-    //@Column(name = "course_id", insertable = false, updatable = false)
+    //Если поля ключа использовать и в основном классе @Entity, то необходимо запретить использование полей для вставки
+    // и обновления данных дополнительными параметрами insertable и updatable в аннотации @Column. (Как сделала ниже)
+    @Column(name = "student_id", insertable = false, updatable = false)
+    private int studentId;
+    @Column(name = "course_id", insertable = false, updatable = false)
     private int courseId;
 
-    //public LinkedPurchaseList(int studentId, int courseId) {
-    //    this.studentId = studentId;
-    //    this.courseId = courseId;
-    //}
+    public LinkedPurchaseList() {
+    }
 
+    public LinkedPurchaseListKey getId() {
+        return id;
+    }
+
+    public void setId(LinkedPurchaseListKey id) {
+        this.id = id;
+    }
 
     public int getStudentId() {
         return studentId;
@@ -39,6 +39,17 @@ public class LinkedPurchaseList {
     public void setCourseId(int courseId) {
         this.courseId = courseId;
     }
+
+    @Override
+    public String toString() {
+        return "LinkedPurchaseList{" +
+                "id=" + id +
+                ", courseId=" + courseId +
+                ", studentId=" + studentId +
+                '}';
+    }
+
+
 }
 
 

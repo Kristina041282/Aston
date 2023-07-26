@@ -10,11 +10,11 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 import java.util.List;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class Main {
     public static void main(String[] args) {
-
-        Course course;
 
         //Подключаемся к б.д. для этого создаем StandardServiceRegistry вызываем у него метод configure и передаем путь
         //рекомендуется один раз статически это сделать и потом этот SessionFactory где-то получать (например в отдел.классе)
@@ -29,15 +29,14 @@ public class Main {
         // класс, что хотим получать
         Root<PurchaseList> root = query.from(PurchaseList.class);//нас интересует в данном случае селект from пишем в параметры какой класс
         query.select(root);//формируем запрос, допустим хотим селект из этой таб., то есть таб. Course
-        List<PurchaseList> courseList = session.createQuery(query).getResultList();//создаем createQuery(вот этого критерия query) и можем получить в разных видах результаты,
+        List<PurchaseList> purchaseLists = session.createQuery(query).getResultList();//создаем createQuery(вот этого критерия query) и можем получить в разных видах результаты,
         //мы выбрали вернуть их нам списком и создали List в который все сложим
-        for (PurchaseList purchaseList : courseList) {
-            //LinkedPurchaseList list = new LinkedPurchaseList(purchaseList.getStudent().getId(), purchaseList.getCourse().getId());
+        for (PurchaseList purchaseList : purchaseLists) {
+            LinkedPurchaseListKey key = new LinkedPurchaseListKey();
+            key.setStudentId(purchaseList.getStudent().getId());
+            key.setCourseId(purchaseList.getCourse().getId());
             LinkedPurchaseList list = new LinkedPurchaseList();
-            System.out.println(list.getStudentId() + " --- " + list.getCourseId());
-            list.setStudentId(purchaseList.getStudent().getId());
-            list.setCourseId(purchaseList.getCourse().getId());
-            System.out.println("IdСтудента:" + list.getStudentId() + " - " + "IdКурса:" + list.getCourseId());
+            list.setId(key);
             session.persist(list);
         }
         transaction.commit();//делаем коммит (получается, закрыли транзакцию)
