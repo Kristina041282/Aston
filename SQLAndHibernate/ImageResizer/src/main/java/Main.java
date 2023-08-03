@@ -21,13 +21,13 @@ public class Main {
         File[] files = srcDir.listFiles();//получает из нее файлы
         int processorCores = files.length / 6;//делим этот массив на столько частей, сколько ядер у процессора, чтобы создать 6 параллельных потока
 
+
         File[] files1 = new File[processorCores];//создаем массив такой длины
         System.arraycopy(files, 0, files1, 0, files1.length);//теперь нужно скопировать(в 1-м массиве берем от 0, дальше массив в который мы это пишем
         //там тоже пишем с 0 и длина равна files1.length
         ImageResizer resizer1 = new ImageResizer(files1, newWidth, dstFolder, start);//создаем наши потоки и сюда зададим соответственно files1 ширина
         // у нас задана в константе, папочка у нас есть куда мы будем это все переносить
         new  Thread(resizer1).start();//и запускаем методом start
-
 
         File[] files2 = new File[2];//и создадим массив files2 с новой длиной (берем длину исходного массива и вычитаем из него длину половинки)
         System.arraycopy(files, processorCores, files2, 0, files2.length);//теперь копируем во 2-й массив, значит опять берем исходный массив, далее исходную позицию,
