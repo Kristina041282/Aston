@@ -35,8 +35,8 @@ public class ImageResizer implements Runnable {
                 }
                 int newHeight = (int) Math.round(image.getHeight() / (image.getWidth() / (double) newWidth));//дальше рассчитывает новую высоту исходя из новой ширины
                 //то есть здесь получаем округленное значение, преобразуем его в int
-
-                BufferedImage newImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);//дальше создаем новую картинку, нового размера 300
+                BufferedImage newImage = resize(image, newWidth, newHeight);//далее создаем новую картинку, нового размера  пропуская ее через метод resize
+                //BufferedImage newImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);//дальше создаем новую картинку, нового размера 300
                 // на сколько-то пикселей, задаем ей тип, что это тип int rgb (то есть каждый пиксель задается целым числом и учитывает красного, зеленого, синего компонентов)
                 int widthStep = image.getWidth() / newWidth;//здесь мы берем не все пиксели, а каждый какой-то (допустим у нас было 3000 на сколько-то пикселей, а у нас
                 //итоговая будет 300то мы берем каждый 10-й пиксель) получается здесь получим цифру 10
@@ -49,7 +49,6 @@ public class ImageResizer implements Runnable {
                 }
                 File newFile = new File(dstFolder + "/" + file.getName());//после этого создаем новый файл в папке dstFolder
                 ImageIO.write(newImage, "jpg", newFile);//и туда его сохраняем в формате jpg
-
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -57,18 +56,11 @@ public class ImageResizer implements Runnable {
         System.out.println("Finished after start: " + (System.currentTimeMillis() - start + "ms"));
     }
 
-    public static BufferedImage resize(BufferedImage src, int targetWidth, int targetHeight, BufferedImageOp ops) {
-        //BufferedImage j = new BufferedImage(targetWidth, targetHeight, src.getType());
-        //Graphics2D g = j.createGraphics();
-        //g.drawImage(src, 0, 0, targetWidth, targetHeight, null);
-        //g.dispose();
-        //return j;
-        return Scalr.resize(src, Scalr.Method.AUTOMATIC, Scalr.Mode.AUTOMATIC, targetWidth, targetHeight, Scalr.OP_ANTIALIAS, ops);
 
-
+    public static BufferedImage resize(BufferedImage src, int targetWidth, int targetHeight) {
+        return Scalr.resize(src, Scalr.Method.AUTOMATIC, Scalr.Mode.AUTOMATIC, targetWidth, targetHeight);
     }
-
-
+}
 
 
 
@@ -107,4 +99,6 @@ public class ImageResizer implements Runnable {
     //    graphics2D.dispose();
     //    return resizeImage;
     //}
-}
+
+
+
