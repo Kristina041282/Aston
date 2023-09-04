@@ -5,19 +5,34 @@ public class Main {
 
     public static void main(String[] args) {
         Bank bank = new Bank();
-        for (int i = 1; i <= 5000; i++) {
+        for (int i = 1; i <= 200; i++) {
             list.add(new Account(String.valueOf(i), (int) (Math.random() * 80000)));//создаю аккаунты и добавляю их в созданный список
+            //list.forEach(account -> {
+            //    bank.addAccount(account);//});
             list.forEach(bank::addAccount);//добавила наш список аккаунтов в метод addAccount
         }
-        ArrayList<Thread> threads = new ArrayList<>();//создаю множество потоков
-        for (int j = 0; j < 20000; j++) {//допустим это будет 2000 потоков
-            threads.add(new Thread(() -> {
-                bank.transfer(String.valueOf((int) (Math.random() * 5000)), String.valueOf((int) (Math.random() * 5000)), (int) (Math.random() * 100000));
+
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                list.forEach(account -> {
+                    bank.transfer(String.valueOf((int) (Math.random() * 500)), String.valueOf((int) (Math.random() * 500)), (int) (Math.random() * 1000000));
+                });
+                }
+        });
+        t.start();
+
+ //       ArrayList<Thread> threads = new ArrayList<>();//создаю множество потоков
+ //       for (int j = 0; j < 10000; j++) {//допустим это будет 2000 потоков
+  //          threads.add(new Thread(() -> {
+  //              bank.transfer(String.valueOf((int) (Math.random() * 200)), String.valueOf((int) (Math.random() * 200)), (int) (Math.random() * 100000));
                 //bank.transfer(getRandom());
-            }));
-        }
-        threads.forEach(Thread::start);
+  //          }));
+  //      }
+  //      threads.forEach(Thread::start);
         //threads.forEach(t -> t.start());
+
+
     }
 }
 
