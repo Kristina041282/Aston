@@ -23,58 +23,59 @@ public class Bank implements Comparable<Bank> {
      * метод isFraud. Если возвращается true, то делается блокировка счетов (как – на ваше
      * усмотрение)
      */
-    public void transfer(String fromAccountNum, String toAccountNum, long amount) {//метод в котором переводим заданное кол-во денег между счетами клиентов
-        Account fromAcc = accounts.get(fromAccountNum);//accounts.get(fromAccountNum) содержит в себе номер счета и сумму
-        Account toAcc = accounts.get(toAccountNum);
+    public void transfer(String fromAccount, String toAccount, long amount) {//метод в котором переводим заданное кол-во денег между счетами клиентов
+        Account fromAccountNumber;
+        Account toAccountNumber;
+
+        //if (fromAcc.getAccNumber().equals(toAcc.getAccNumber())) {
+        //if (fromAcc.getAccNumber().hashCode() > toAcc.getAccNumber().hashCode()) {
+        Account fromAcc = accounts.get(fromAccount);
+        Account toAcc = accounts.get(toAccount);
+        if (fromAcc.hashCode() > toAcc.hashCode()) {
+            fromAccountNumber = toAcc;
+            toAccountNumber = fromAcc;
+        } else {
+            fromAccountNumber = fromAcc;
+            toAccountNumber = toAcc;
+        }
         //synchronized (this) {//так как у нас обычный класс не со статическим методом будем синхронизироваться по целому объекту (прописав this)
+        synchronized (fromAccountNumber) {//таким образом синхронизируется блок кода
+            synchronized (toAccountNumber) {
+                boolean check = false;
 
+                if (fromAcc.getMoney() < amount) {
+                    return;
+                }
 
-            //fromAcc.getAccNumber().compareTo(fromAcc.getAccNumber());
-        //synchronized (compareTo(fromAcc.getAccNumber()) )
-            synchronized (fromAcc) {//таким образом синхронизируется блок кода
-                synchronized (toAcc) {
+                if (amount > 0 && amount < 50000) {
+                    if (!fromAcc.isBlock() && !toAcc.isBlock()) {
+                        fromAcc.setMoney(fromAcc.getMoney() - amount);
+                        toAcc.setMoney(toAcc.getMoney() + amount);
+                        return;
+                    }
+                    return;
+                }
 
-                    boolean check = false;
-                    if (amount > 0 && amount < 50000 && fromAcc.getMoney() >= amount) {
-                        if (!fromAcc.isBlock() && !toAcc.isBlock()) {
-                            //System.out.println("Общая сумма на всех счетах до перевода: " + getSumAllAccounts());
-                            //System.out.println("На данный момент на счету: " + fromAcc.getMoney() + " " + "Переводим сумму: " + amount);
+                if (amount >= 50000 && fromAcc.getMoney() >= amount) {
+                    if (!fromAcc.isBlock() && !toAcc.isBlock()) {
+                        try {
+                            check = isFraud(fromAccount, toAccount, amount);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                        if (check) {//в случае если проверка выдаст true
+                            fromAcc.blockedAcc();//то заблокируем оба счета
+                            toAcc.blockedAcc();
+                        } else {
                             fromAcc.setMoney(fromAcc.getMoney() - amount);
                             toAcc.setMoney(toAcc.getMoney() + amount);
-                            //System.out.println(" Остаток после перевода на счету: " + fromAcc.getMoney());
-                            //System.out.println("Остаток на всех счетах после перевода: " + getSumAllAccounts());
-                            //System.out.println(" переходим к следующей транзакции ->");
-                        } else {
-                            //System.out.println("Операция отменена, Ваши счета заблокированы:");
-                            //System.out.println(" переходим к следующей транзакции ->");
-                        }
-                    }
-
-                    if (amount >= 50000 && fromAcc.getMoney() >= amount) {
-                        if (!fromAcc.isBlock() && !toAcc.isBlock()) {
-                            //System.out.println("Для перевода суммы с выше 50_000 нам требуется не много времени на проверку мошенничества");
-                            try {
-                                check = isFraud(fromAccountNum, toAccountNum, amount);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
-                            if (check) {//в случае если проверка выдаст true
-                                //System.out.println("Операция прервана, блокируем Ваши счета");
-                                fromAcc.blockedAcc();//то заблокируем оба счета
-                                toAcc.blockedAcc();
-                                //System.out.println(" переходим к следующей транзакции ->");
-                            } else {
-                                //System.out.println("Проверка успешно прошла, перечисляем деньги");
-                                fromAcc.setMoney(fromAcc.getMoney() - amount);
-                                toAcc.setMoney(toAcc.getMoney() + amount);
-                                //System.out.println(" переходим к следующей транзакции ->");
-                            }
                         }
                     }
                 }
             }
         }
+    }
 
 
 
