@@ -9,7 +9,6 @@ import java.util.concurrent.TimeUnit;
 public class MyAction extends RecursiveAction {
 
     public Node node;
-    public static String URL = "https://www.skillbox.ru";
     public static Set<String> linksFromTags = new HashSet<>();
     public static Set<Node> filteredLinks = new HashSet<>();//создала Set для того, чтобы сложить сюда все ссылки
     public List<MyAction> taskLists = new ArrayList<>();
@@ -18,8 +17,8 @@ public class MyAction extends RecursiveAction {
  //   public MyAction(Node node) {
  //       this.node = node;
  //   }
-    public MyAction(String string) {
-        this.string = string;
+    public MyAction(String string) {//передаю в параметры String URL
+        this.string = string;//инициализирую ссылку
     }
 
 
@@ -28,7 +27,7 @@ public class MyAction extends RecursiveAction {
 
         try {
             TimeUnit.MILLISECONDS.sleep(150);
-            Document document = Jsoup.connect(URL).get();//выкачиваем содержимое текста
+            Document document = Jsoup.connect(Main.URL).get();//выкачиваем содержимое текста
             Elements elements = document.select("a");//выводим все гиперссылки которые находятся на странице
 
             elements.forEach(element -> {

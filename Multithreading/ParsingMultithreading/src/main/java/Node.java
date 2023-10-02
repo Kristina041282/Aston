@@ -1,7 +1,7 @@
 import java.util.Set;
 import java.util.concurrent.ForkJoinTask;
 
-public class Node extends ForkJoinTask<Set<String>> {
+public class Node {
 
     public String link;
 
@@ -24,29 +24,5 @@ public class Node extends ForkJoinTask<Set<String>> {
         return "Node{" +
                 "link='" + link + '\'' +
                 '}';
-    }
-
-
-
-
-
-
-
-
-
-
-    @Override
-    public Set<String> getRawResult() {
-        return null;
-    }
-
-    @Override
-    protected void setRawResult(Set<String> value) {
-
-    }
-
-    @Override
-    protected boolean exec() {
-        return false;
     }
 }
