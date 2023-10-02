@@ -1,37 +1,23 @@
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
-import java.io.IOException;
-import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
+import java.util.concurrent.ForkJoinPool;
 
 public class Main {
 
-    public static String URL = "https://skillbox.ru";
-    public static Set<String> linksFromTags = new HashSet<>();
-    public static Set<String> filteredLinks = new HashSet<>();
-
     public static void main(String[] args) {
 
-        try {
-            TimeUnit.MILLISECONDS.sleep(150);
-            Document document = Jsoup.connect(URL).get();//выкачиваем содержимое текста
-            Elements elements = document.select("a");//выводим все гиперссылки которые находятся на странице
-            elements.forEach(element -> {
-                linksFromTags.add(element.attr("href"));//и чтобы вывести сам url, который содержится в ссылке, для этого обращаемся к аттрибуту этого элемента
-            });//гиперссылки указываются в параметре href (и мы получаем конкретные ссылки из этих тегов)
-            linksFromTags.forEach(s -> {//далее прохожу по каждой этой ссылке и отфильтровываю
-                    if (!s.endsWith(".pdf") && !s.contains("#")) {
-                        filteredLinks.add(s);//отфильтрованные складываю в set1
-                    }
-                //}
-                filteredLinks.forEach(System.out::println);
-            });
-        } catch (InterruptedException | IOException e) {
-            e.printStackTrace();//можно сделать не printStackTrace()а записывать этот StackTrace в logger
-        }
+        Node root = new Node(MyAction.URL);//передаем ссылку
+        Set<String> strings = new ForkJoinPool().invoke(root);//вызываем ForkJoinPool() у него метод invoke и вызываем с помощью invoke у него задачу от корневого узла.
+        //Этот метод нам вернет всю кол-цию по всему нашему дереву
+        System.out.println(strings);
+
+
+
+ //       ForkJoinPool pool = new ForkJoinPool();
+ //       Node root = new Node(MyAction.URL);
+ //       pool.invoke(root);
+        //pool.shutdown();
+        //System.out.println(" Finish");
+        //System.out.println(filteredLinks.size());
     }
 }
 
@@ -49,24 +35,6 @@ public class Main {
 
 
 
-
-
-
-
-
-
-//System.out.println();
-//            System.out.println();
-//            System.out.println();
-//            System.out.println("linksFromTags" + linksFromTags);
-//            System.out.println();
-//            System.out.println();
-//            System.out.println();
-
-        //System.out.println();
-        //            System.out.println();
-        //            System.out.println();
-        //            System.out.println("filteredLinks" + filteredLinks);
 
 
 
