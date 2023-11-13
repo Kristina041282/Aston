@@ -4,11 +4,14 @@ import java.util.concurrent.Callable;
 public class MyCallable implements Callable<Long> {
 
     private String filename;
-    private Long num;
+    private int regionNumStart;
+    private int regionNumEnd;
 
-    public MyCallable(String filename, Long num) {//создала конструктор для разделения задачи на несколько потоков
+    public MyCallable(String filename, int regionNumStart, int regionNumEnd) {//создала конструктор для разделения задачи на несколько потоков
         this.filename = filename;//для этого инициализирую путь к файлу для записи номеров
-        this.num = num;
+        this.regionNumStart = regionNumStart;
+        this.regionNumEnd = regionNumEnd;
+
     }
 
     @Override
@@ -18,7 +21,7 @@ public class MyCallable implements Callable<Long> {
 
         char letters[] = {'У', 'К', 'Е', 'Н', 'Х', 'В', 'А', 'Р', 'О', 'С', 'М', 'Т'};
         int regionCode;
-        for (regionCode = 1; regionCode < 100; regionCode ++) {
+        for (regionCode = regionNumStart; regionCode < regionNumEnd; regionCode ++) { //диапазон регионов в цикле
             StringBuilder builder = new StringBuilder();//создаем StringBuilder() для каждого региона
             for (int number = 1; number < 1000; number++) {//так перебираются буквы
                 for (char firstLetter : letters) {
@@ -40,17 +43,16 @@ public class MyCallable implements Callable<Long> {
         writer.close();
 
         System.out.println((System.currentTimeMillis() - start) + " ms");
-        //return builder.toString();
         return Thread.currentThread().getId();
     }
-
 
     private static String padNumber(int number, int numberLength) {//передаем на вход номер и какой длины должен возвращать числа
         String numberStr = Integer.toString(number);//создали строку, приравняли к ней номер переданный в параметры (а почему перевели в строку, потому что потом
         //номер формируется в строке в майне)
         int padSize = numberLength - numberStr.length();//отнимаем от положенной длины длину номера (int number которую передали на вход)
         for (int i = 0; i < padSize; i++) {//идем циклом до этой полученной цифры int padSize
-            numberStr = numberStr.concat(String.valueOf('0'));//так у нас идет 10, 20, 30 и т.д. и затем 11, 12, 13, 14, 15 и т.д
+            //numberStr = numberStr.concat(String.valueOf('0'));//так у нас идет 10, 20, 30 и т.д. и затем 11, 12, 13, 14, 15 и т.д
+            numberStr = '0' + numberStr;
         }
         return numberStr;//возвращаем строку
     }
