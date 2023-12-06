@@ -6,7 +6,8 @@ public class DBConnection {//в этом классе будем добавля�
 
     private static String dbName = "learn";
     private static String dbUser = "root";
-    private static String dbPass = "yurii2123041407kristina";
+    private static String dbPass = "kristina";
+    private static StringBuilder insertQuery = new StringBuilder();//конкатенация строк при помощи StringBuilder
 
     public static Connection getConnection() {//соединяемся с базой и создает табличку с полями name birthDate и count
         if (connection == null) {
@@ -21,8 +22,6 @@ public class DBConnection {//в этом классе будем добавля�
                     "birthDate DATE NOT NULL, " +
                     "`count` INT NOT NULL, " +
                     "PRIMARY KEY(id))");//, " +
-                        //"UNIQUE KEY name_date(name(50), birthDate))");//чтобы эти 2 поля были уникальным индексом мы создали здесь этот индекс "UNIQUE KEY name_date(name(50), birthDate))"
-                // и обязательно указываем длину, которая будет использоваться для создания ключа
             } catch (SQLException e) {
                 e.printStackTrace();
             }
